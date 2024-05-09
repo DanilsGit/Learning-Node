@@ -5,8 +5,15 @@
 // });
 
 const express = require('express');
+const logger = require('./loggerMiddleware');
+const cors = require('cors');
+
 const app = express();
 app.use(express.json());
+app.use(cors()); //Middleware que permite a cualquier origen hacer peticiones a la API
+//Middleware: son funciones que se ejecutan durante el 
+//ciclo de vida de la solicitud al servidor
+
 
 let notes = [
     {
@@ -62,6 +69,7 @@ app.post('/api/notes', (req, res) => {
             error: 'content missing'
         });
     }
+    
 
     const newNote = {
         id: newId,
@@ -73,6 +81,10 @@ app.post('/api/notes', (req, res) => {
     notes = [...notes, newNote];
     res.status(201).json(newNote);
 })
+
+app.use(logger);
+//Middleware que se ejecuta para todas las rutas
+
 
 const PORT = 3001;
 app.listen(PORT, () => {
